@@ -1,0 +1,92 @@
+<html>
+<head>
+  <title>My Life Game</title>
+  <script language="javascript">
+
+  const gameSize = 5;
+  const width = 100;
+
+  var seed = 1;
+  const random = function() {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+  }
+
+  var plantsLayer = [];
+  for(var i=0; i<gameSize; i++){
+   plantsLayer[i] = [];
+  }
+
+  var prayLayer = [];
+  for(var i=0; i<gameSize; i++){
+   prayLayer[i] = [];
+  }
+
+  var predatorLayer = [];
+  for(var i=0; i<gameSize; i++){
+   predatorLayer[i] = [];
+  }
+
+  const predatorImg = new Image();
+  predatorImg.src = "./predator.png";
+
+  const prayImg = new Image();
+  prayImg.src = "./pray.png";
+
+  const grassImg = new Image();
+  grassImg.src = "./grass.png";
+
+  var run = function(){
+
+    var canvas = document.getElementById("gameCanvas");
+    canvas.width = gameSize * width;
+    canvas.height = gameSize * width;
+
+    var ctx = canvas.getContext("2d");
+    ctx.beginPath();
+
+    for(var i=0; i<gameSize; i++){
+    	for(var j=0; j<gameSize; j++){
+
+     plantsLayer[i][j] = 0;
+     prayLayer[i][j] = 0;
+     predatorLayer[i][j] = 0;
+
+      var rnd = random();
+      if(rnd < 0.35){
+        //empty
+      } else if(rnd < 0.8){
+          plantsLayer[i][j]=1;
+      } else if(rnd < 0.95){
+          prayLayer[i][j] = 1;
+      } else if(rnd <= 1){ 
+          predatorLayer[i][j] = 1;
+      }
+
+      ctx.clearRect(i * width , j * width , (i * width) + width, (j * width) + width);
+      ctx.rect(i * width , j * width , (i * width) + width, (j * width) + width);
+
+      if(plantsLayer[i][j]){
+         ctx.drawImage(grassImg, i * width , j * width, width, width);
+      }
+
+      if(prayLayer[i][j]){
+         ctx.drawImage(prayImg, i * width , j * width, width, width);
+      }
+
+      if(predatorLayer[i][j]){
+         ctx.drawImage(predatorImg, i * width , j * width, width, width);
+      }
+  	}
+    ctx.stroke();
+  }
+}
+</script>
+
+</head>
+<body>
+  <a id="myLink" href="#" onclick="run();return false;">start</a>
+  <br>
+  <canvas id="gameCanvas" width="900" height="900"></canvas>
+</body>
+</html>
